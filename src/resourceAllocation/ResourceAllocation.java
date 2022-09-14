@@ -30,18 +30,32 @@ public class ResourceAllocation {
         JobExecution job1Exec1 = new JobExecution();
         job1Exec1.setJob(job1);
         job1Exec1.setCpuUsage(2);
-        job1Exec1.setMemUsage(33);
+        job1Exec1.setMemUsage(70);
         job1Exec1.setExecutionDate(new Date());
         JobExecution job1Exec2 = new JobExecution();
         job1Exec2.setJob(job1);
         job1Exec2.setCpuUsage(2);
-        job1Exec2.setMemUsage(28);
+        job1Exec2.setMemUsage(75);
         job1Exec2.setExecutionDate(new Date());
         List<JobExecution> executions = new ArrayList<>();
         executions.add(job1Exec1);
         executions.add(job1Exec2);
         log.put(job1,executions);
-       // log.put(job2,null);
+
+        JobExecution job2Exec1 = new JobExecution();
+        job2Exec1.setJob(job2);
+        job2Exec1.setCpuUsage(1);
+        job2Exec1.setMemUsage(20);
+        job2Exec1.setExecutionDate(new Date());
+        JobExecution job2Exec2 = new JobExecution();
+        job2Exec2.setJob(job2);
+        job2Exec2.setCpuUsage(1);
+        job2Exec2.setMemUsage(25);
+        job2Exec2.setExecutionDate(new Date());
+        List<JobExecution> executions2 = new ArrayList<>();
+        executions2.add(job2Exec1);
+        executions2.add(job2Exec2);
+        log.put(job2,executions2);
         JobCoordinator coordinator = new JobCoordinator();
         List<Resource> resources = new ArrayList<>();
         Resource EC2_AMI123 = new EC2(100, 2, "AMI123");
@@ -55,19 +69,12 @@ public class ResourceAllocation {
 
 
 
-         /*
-            1. match best resources for job
-            2. match for time frame
-            3. search next job and see if no collision in resources put in concurrences
-            4. if collision put all collision machine in counter and check if availability is less than 10% - check what is the collision and decide if to postpone or apply another resource
-            5. if postpone put next, if not prepare resource in advance
-            6.
-         */
 
 
     /*
         1. if using the same resource order by duration - put shorter duration first
         2. maybe job use more than one resource ?
+        3. order and match resource by lowest params to highest (in the same categories)
 
 
 

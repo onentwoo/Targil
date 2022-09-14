@@ -25,7 +25,7 @@ public class JobCoordinator {
                 return resource;
             }
         }
-        System.out.println("No matching resource for Job "+job.getName());
+        System.out.println("No matching resource for Job "+job.getId());
         return null;
     }
 
@@ -51,20 +51,29 @@ public class JobCoordinator {
             return null;
         }
 
-        if ((orphanJobs.size()*100/resourceToJob.keySet().size())>10) {
-            int reassignJob = 0;
-            for (Job orphanJob: orphanJobs) {
-                Resource assignedResource = matchResourceForJob(orphanJob,resources);
-                resourceToJob.put(orphanJob, assignedResource);
-                reassignJob++;
-                if (((orphanJobs.size()-reassignJob)*100/resourceToJob.keySet().size())<10) {
-                    break;
+        if (orphanJobs.size()>0) {
+            System.out.println(orphanJobs.size() + " Orphan jobs without resource found");
+            double failureRate = (orphanJobs.size() * 100 / jobExecutions.keySet().size());
+            if (failureRate > 10) {
+                System.out.println("failure Rate of "+failureRate+" is NOT acceptable, reusing resources");
+                int reassignJob = 0;
+                for (Job orphanJob : orphanJobs) {
+                    Resource assignedResource = matchResourceForJob(orphanJob, resources);
+                    resourceToJob.put(orphanJob, assignedResource);
+                    reassignJob++;
+                    if (((orphanJobs.size() - reassignJob) * 100 / resourceToJob.keySet().size()) < 10) {
+                        break;
+                    }
                 }
+            } else {
+                System.out.println("failure Rate of "+failureRate+" is acceptable");
             }
         }
         System.out.println("concurrency is ready");
         System.out.println("the following resources should be plan ahead:");
-        resourceToJob.values().forEach(resource ->  System.out.println(resource.getName()));
+        for (Job job : resourceToJob.keySet()) {
+            System.out.println("use resource "+resourceToJob.get(job).getName()+" for job "+job.getId());
+        }
         return resourceToJob;
 
     }

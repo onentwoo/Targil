@@ -12,6 +12,17 @@ public class Job {
     Date endTime;
     Double averageMemUsage;
     Double averageCPUUsage;
+    Double averageSpaceUsage;
+
+    public Double getAverageSpaceUsage() {
+        return averageSpaceUsage;
+    }
+
+    public void setAverageSpaceUsage(Double averageSpaceUsage) {
+        this.averageSpaceUsage = averageSpaceUsage;
+    }
+
+
 
     public Job(long id) {
         this.id = id;
