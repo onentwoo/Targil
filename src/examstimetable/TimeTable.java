@@ -7,6 +7,11 @@ public class TimeTable {
 
     public List<Exam> produceTimeTable(String studentID, List<Course> courses) {
         List<Exam> studentExamsTable = new ArrayList<>();
+        if (courses == null) {
+            System.out.println("No courses were define for student "+studentID);
+            return null;
+        }
+
 
         for (Course course : courses) {
             boolean foundAPlace = false;

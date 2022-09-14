@@ -62,6 +62,7 @@ public class ResourceAllocation {
         Resource EC2_AMI456 = new EC2(50, 1 , "AMI456");
         resources.add(EC2_AMI123);
         resources.add(EC2_AMI456);
+
         coordinator.concurrencyOfJobs(log, resources);
     }
 

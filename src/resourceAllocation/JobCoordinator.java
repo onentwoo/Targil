@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class JobCoordinator {
 
-
+    final static int tresholdFailureRate = 10;
 
     private Resource matchDistinctResourceForJob(Job job, List<Resource> resources, Map<Job,Resource> resourceToJob) {
         for (Resource resource : resources) {
@@ -29,12 +29,16 @@ public class JobCoordinator {
         return null;
     }
 
-    public Map<Job,Resource> concurrencyOfJobs(Map<Job, List<JobExecution>> jobExecutions, List<Resource> resources) {
-
+    public void analyzeJobUsageLog(Map<Job, List<JobExecution>> jobExecutions) {
         for (Job job: jobExecutions.keySet()) {
             job.averageMemUsage = jobExecutions.get(job).stream().mapToDouble(j -> j.memUsage).average().getAsDouble();
             job.averageCPUUsage = jobExecutions.get(job).stream().mapToDouble(j -> j.cpuUsage).average().getAsDouble();
         }
+    }
+
+    public Map<Job,Resource> concurrencyOfJobs(Map<Job, List<JobExecution>> jobExecutions, List<Resource> resources) {
+        analyzeJobUsageLog(jobExecutions);
+
         Map<Job,Resource> resourceToJob = new HashMap<>();
         List<Job> orphanJobs = new ArrayList<>();
         for (Job job: jobExecutions.keySet()) {
@@ -54,7 +58,7 @@ public class JobCoordinator {
         if (orphanJobs.size()>0) {
             System.out.println(orphanJobs.size() + " Orphan jobs without resource found");
             double failureRate = (orphanJobs.size() * 100 / jobExecutions.keySet().size());
-            if (failureRate > 10) {
+            if (failureRate > tresholdFailureRate) {
                 System.out.println("failure Rate of "+failureRate+" is NOT acceptable, reusing resources");
                 int reassignJob = 0;
                 for (Job orphanJob : orphanJobs) {

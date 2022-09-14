@@ -30,7 +30,8 @@ Implement the logical component for planning an exam timetable in which there ar
 
 
     /*
-        1. put courses with only one exam date first, thant 2 date etc.
+        improvements:
+        1. put courses with only one exam date first, than 2 date etc.
 
      */
 
